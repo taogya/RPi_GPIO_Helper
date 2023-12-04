@@ -99,16 +99,16 @@ class Pin:
         self.__state = state
         self.__initial = initial
         self.__pud = pull_up_down
-        RPI_GPIO.setup(self.__channel, self.__state, self.__initial, self.__pud)
+        GPIO.setup(self.__channel, self.__state, self.__initial, self.__pud)
 
     def input(self) -> bool:
-        if self.__state == RPI_GPIO.IN:
-            return RPI_GPIO.input(self.__channel)
+        if self.__state == GPIO.IN:
+            return GPIO.input(self.__channel)
         else:
             raise ValueError('This channel state is OUT.')
 
     def output(self, value: bool):
-        if self.__state == RPI_GPIO.OUT:
-            RPI_GPIO.output(self.__channel, value)
+        if self.__state == GPIO.OUT:
+            GPIO.output(self.__channel, value)
         else:
             raise ValueError('This channel state is IN.')
