@@ -94,7 +94,7 @@ except (ImportError, RuntimeError):
 
 
 class Pin:
-    def __init__(self, channel: int, state: , initial, pull_up_down):
+    def __init__(self, channel, state , initial, pull_up_down):
         self.__channel = channel
         self.__state = state
         self.__initial = initial
