@@ -93,22 +93,25 @@ except (ImportError, RuntimeError):
                 print(f'RPI.GPIO.PWM.ChangeDutyCycle -> {duty_cycle}')
 
 
+GPIO.setmode(GPIO.BCM)
+
+
 class Pin:
-    def __init__(self, channel, state , initial, pull_up_down):
+    def __init__(self, channel, state , initial=GPIO.LOW, pull_up_down=GPIO.PUD_OFF):
         self.__channel = channel
         self.__state = state
         self.__initial = initial
         self.__pud = pull_up_down
-        GPIO.setup(self.__channel, self.__state, self.__initial, self.__pud)
+        if state == GPIO.IN: 
+            GPIO.setup(channel, state, pull_up_down=pull_up_down)
+        elif state == GPIO.OUT:
+            GPIO.setup(channel, state, initial=GPIO.LOW)
+        else:
+            raise ValueError("Not IN or OUT") 
 
     def input(self) -> bool:
-        if self.__state == GPIO.IN:
-            return GPIO.input(self.__channel)
-        else:
-            raise ValueError('This channel state is OUT.')
+        return GPIO.input(self.__channel)
 
     def output(self, value: bool):
-        if self.__state == GPIO.OUT:
-            GPIO.output(self.__channel, value)
-        else:
-            raise ValueError('This channel state is IN.')
+        GPIO.output(self.__channel, value)
+
