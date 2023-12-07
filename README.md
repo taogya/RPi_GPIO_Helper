@@ -7,6 +7,7 @@ https://github.com/taogya/RPi_GPIO_Helper
 
 # Installation
 ```
+# pip install RPi.GPIO
 pip install RPi-GPIO-Helper
 ```
 
