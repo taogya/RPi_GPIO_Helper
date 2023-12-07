@@ -2,6 +2,9 @@
 RPi.GPIO Helper Library.<br>
 https://pypi.org/project/RPi-GPIO-Helper/
 
+github<br>
+https://github.com/taogya/RPi_GPIO_Helper
+
 # Installation
 ```
 pip install RPi-GPIO-Helper
