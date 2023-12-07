@@ -31,7 +31,7 @@ except (ImportError, RuntimeError):
 
         @classmethod
         def setwarnings(cls, flag):
-            print(f'RPI.GPIO.setwarnings -> {mode}')
+            print(f'RPI.GPIO.setwarnings -> {flag}')
 
         @classmethod
         def setup(cls, channel, state, initial=LOW, pull_up_down=PUD_OFF):
@@ -97,17 +97,19 @@ GPIO.setmode(GPIO.BCM)
 
 
 class Pin:
-    def __init__(self, channel, state , initial=GPIO.LOW, pull_up_down=GPIO.PUD_OFF):
+    def __init__(self, channel, state, initial=GPIO.LOW, pull_up_down=GPIO.PUD_OFF, cleanup=True):
         self.__channel = channel
         self.__state = state
         self.__initial = initial
         self.__pud = pull_up_down
-        if state == GPIO.IN: 
+        if cleanup:
+            self.cleanup()
+        if state == GPIO.IN:
             GPIO.setup(channel, state, pull_up_down=pull_up_down)
         elif state == GPIO.OUT:
             GPIO.setup(channel, state, initial=GPIO.LOW)
         else:
-            raise ValueError("Not IN or OUT") 
+            raise ValueError("Not IN or OUT")
 
     def input(self) -> bool:
         return GPIO.input(self.__channel)
@@ -115,3 +117,23 @@ class Pin:
     def output(self, value: bool):
         GPIO.output(self.__channel, value)
 
+    def cleanup(self):
+        GPIO.cleanup(self.__channel)
+
+    @property
+    def state(self):
+        return self.__state
+
+    @property
+    def initial(self):
+        return self.__initial
+
+    @property
+    def pud(self):
+        return self.__pud
+
+    def __del__(self):
+        self.cleanup()
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.cleanup()
