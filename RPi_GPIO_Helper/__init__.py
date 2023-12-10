@@ -13,8 +13,8 @@ except (ImportError, RuntimeError):
         BCM = 11
 
         PUD_OFF = 20
-        PUD_UP = 21
-        PUD_DOWN = 22
+        PUD_DOWN = 21
+        PUD_UP = 22
 
         RISING = 31
         FALLING = 32
