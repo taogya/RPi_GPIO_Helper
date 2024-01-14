@@ -2,6 +2,7 @@
 try:
     import RPi.GPIO as GPIO
 except (ImportError, RuntimeError):
+    import typing as typ
     class GPIO:
         LOW = 0
         HIGH = 1
@@ -51,7 +52,7 @@ except (ImportError, RuntimeError):
             print(f'RPI.GPIO.cleanup -> {channel}')
 
         @classmethod
-        def wait_for_edge(cls, channel, event, timeout=None):
+        def wait_for_edge(cls, channel, event, timeout=None) -> typ.Optional[int]:
             print(f'RPI.GPIO.wait_for_edge -> {channel}, {event}, {timeout}')
             return channel
 
@@ -64,8 +65,9 @@ except (ImportError, RuntimeError):
             print(f'RPI.GPIO.add_event_callback -> {channel}, {callback}, {bouncetime}')
 
         @classmethod
-        def event_detected(cls, channel):
+        def event_detected(cls, channel) -> bool:
             print(f'RPI.GPIO.event_detected -> {channel}')
+            return True
 
         @classmethod
         def remove_event_detect(cls, channel):
@@ -119,6 +121,26 @@ class Pin:
 
     def cleanup(self):
         GPIO.cleanup(self.__channel)
+
+    def wait_for_edge(self, event=GPIO.FALLING, timeout_ms=None) -> bool:
+        ret = GPIO.wait_for_edge(self.__channel, event, timeout_ms)
+        return ret is not None
+
+    def add_event_detect(self, event, callback=None, bouncetime_ms=None):
+        GPIO.add_event_detect(self.__channel, event, callback, bouncetime_ms)
+
+    def add_event_callback(self, callback, bouncetime_ms=None):
+        GPIO.add_event_callback(self.__channel, callback, bouncetime_ms)
+
+    def event_detected(self) -> bool:
+        return GPIO.event_detected(self.__channel)
+
+    def remove_event_detect(self):
+        GPIO.remove_event_detect(self.__channel)
+
+    @property
+    def channel(self):
+        return self.__channel
 
     @property
     def state(self):
